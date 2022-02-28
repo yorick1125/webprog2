@@ -15,9 +15,17 @@ async function addPokemon(name, type){
     if(!isValid1(name, type)){
         return null;
     }
-    
-    const pokemon = [{"name": name, "type": type}];
-    await utilities.writeToJsonFile(filename, pokemon);
+
+    // check if pokemon already exists to fix duplicate entries
+    const test = await findByName(name);
+    if(test != null){
+        return test;
+    }
+    let data = await utilities.readFromJsonFile(filename);
+    const pokemon = {"name": name, "type": type};
+
+    data.push(pokemon);
+    await utilities.writeToJsonFile(filename, data);
     return pokemon;
 }
 

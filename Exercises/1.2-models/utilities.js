@@ -7,7 +7,7 @@ const fs = require('fs');
 * @param {any} filename
 */
 async function readFromJsonFile(filename) {
-   const rawText = fs.readFileAsync(filename);
+   const rawText = fs.readFileSync(filename);
    const parsedJson = JSON.parse(rawText.toString());
    return parsedJson;
 }
@@ -19,7 +19,7 @@ async function readFromJsonFile(filename) {
 */
 async function writeToJsonFile(filename, data) {
    const stringToWrite = JSON.stringify(data);
-   fs.writeFileAsync(filename, stringToWrite);
+   fs.writeFileSync(filename, stringToWrite);
 }
  
 module.exports = {

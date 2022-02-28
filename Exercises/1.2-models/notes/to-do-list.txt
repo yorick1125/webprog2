@@ -4,4 +4,6 @@
 /Find by name
 /Replace pokemon
 /Delete pokemon
-
+/fix duplicates
+/make utils async
+-write unit tests
