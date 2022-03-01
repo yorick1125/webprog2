@@ -7,7 +7,7 @@ const pokemonData = [
 { name: 'Bulbasaur', type: 'Grass' },
 { name: 'Charmander', type: 'Fire' },
 { name: 'Squirtle', type: 'Water' },
-{ name: 'Pikachu', type: 'Lightning' },
+{ name: 'Pikachu', type: 'Electric' },
 { name: 'Pidgeotto', type: 'Flying' },
 { name: 'Koffing', type: 'Poison' }
 ]
@@ -20,4 +20,13 @@ beforeEach(async () => {
     try {
         utils.writeToJsonFile(db, []);
      } catch (err) {}
+});
+
+test('Pokemon was created successfully.', async () => {
+	const { name, type } = generatePokemonData();
+	const pokemon = await model.addPokemon(name, type);
+
+    expect(pokemon).toBeInstanceOf(Object);
+    expect(pokemon.name).toBe(name);
+    expect(pokemon.type).toBe(type);
 });

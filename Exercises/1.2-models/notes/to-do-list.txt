@@ -6,4 +6,7 @@
 /Delete pokemon
 /fix duplicates
 /make utils async
--write unit tests
+/write unit test
+
+1.3
+
