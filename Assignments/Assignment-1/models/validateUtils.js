@@ -1,21 +1,17 @@
-const validTypes = ["normal", "grass", "fire", "water", "electric", "psychic", "poison", "flying"]
 const validator = require('validator');
 
-function isValid(name, type){ 
-    // Check for valid type
-    if(!validTypes.includes(type)){
-        return false;
-    }
+function isValid(name, year){ 
+    return validName(name) && validYear(year);
+}
 
-    // Check for valid name
-    if(typeof name === "string" && validator.isAlpha(name)){
-        if (name){
-            return true;
-        }
-        else {
-            return false;
-        }
-    }
+function validName(name){
+    // if name is type string and is alphabetic characters
+    return typeof name === "string";
+}
+
+function validYear(year){
+    // if date is between 0 and current year
+    return 0 < year && year <= new Date().getFullYear();
 }
 
 

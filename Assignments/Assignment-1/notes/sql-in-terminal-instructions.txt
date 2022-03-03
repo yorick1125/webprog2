@@ -1,4 +1,4 @@
--> docker container exec -it pokemonSqlDBContainer bash
+-> docker container exec -it web-ii-2022 bash
 -> mysql -u root -p
--> use pokemon_db;
+-> use music_db;
 -> show tables;

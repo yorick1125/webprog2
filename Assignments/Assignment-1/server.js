@@ -1,14 +1,13 @@
 'use strict';
 var http = require('http');
 var port = 1339;
-const model = require('./models/pokemonModelFileAsync.js');
-const mysql = require('./models/pokemonModelMysql.js');
+const model = require('./models/album-model');
 
 http.createServer(async function (req, res) {
    res.writeHead(200, {'Content-Type': 'text/plain'});
-   await mysql.initialize();
-   const pokemon = await mysql.createPokemon("grovyle", "grass");
+   await model.initialize();
+   const album = await model.createAlbum("KOD", 2018);
    
 
-   res.end(pokemon.name);
+   res.end(album.name);
 }).listen(port);
