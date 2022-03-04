@@ -1,2 +1,5 @@
-
-
+/1. change album name to title.
+/2. test -> album not found with wrong title
+/3. test -> album not updated with wrong title
+/4. use new database for testing
+/5. show results in server.js

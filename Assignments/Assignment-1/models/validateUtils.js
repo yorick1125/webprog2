@@ -1,12 +1,12 @@
 const validator = require('validator');
 
-function isValid(name, year){ 
-    return validName(name) && validYear(year);
+function isValid(title, year){ 
+    return validTitle(title) && validYear(year);
 }
 
-function validName(name){
-    // if name is type string and is alphabetic characters
-    return typeof name === "string";
+function validTitle(title){
+    // if title is type string and is alphabetic characters
+    return typeof title === "string" && !isEmpty(title);
 }
 
 function validYear(year){
@@ -14,7 +14,9 @@ function validYear(year){
     return 0 < year && year <= new Date().getFullYear();
 }
 
-
+function isEmpty(s){
+    return s === "" || s === " " || !s
+}
 
 module.exports = {
     isValid

@@ -2,12 +2,15 @@ const model = require('../models/album-model');
 
 /* Data to be used to generate random album for testing */
 const albumData = [
-{ name: 'Die Lit', year: 2018},
-{ name: 'Thriller', year: 1982 },
-{ name: 'Donda', year: 2021 },
-{ name: 'Forest Hill Drives', year: 2014},
-{ name: 'Psychodrama', year: 2019 },
-{ name: 'Astroworld', year: 2018 }
+{ title: 'Die Lit', year: 2018},
+{ title: 'Thriller', year: 1982 },
+{ title: 'Donda', year: 2021 },
+{ title: 'Forest Hill Drives', year: 2014},
+{ title: 'Psychodrama', year: 2019 },
+{ title: 'Meet The Woo 2', year: 2020 },
+{ title: 'Savage Mode 2', year: 2020 },
+{ title: 'A Love Letter To You 3', year: 2018 },
+{ title: 'Culture', year: 2017 },
 ]
 
 /** Since a Album can only be added to the DB once, we have to splice from the array. */
@@ -29,66 +32,102 @@ beforeEach(async () => {
 
 // CREATE
 test('Album was created successfully.', async () => {
-	const { name, year } = generateAlbumData();
-	const album = await model.create(name, year);
+	const { title, year } = generateAlbumData();
+	const album = await model.create(title, year);
 
     expect(album).toBeInstanceOf(Object);
-    expect(album.name).toBe(name);
+    expect(album.title).toBe(title);
     expect(album.year).toBe(year);
 });
 
-test('Album was not created with an empty string.', async () => {
-	const album = await model.create(name, year);
+test('Album was not created with blank string.', async () => {
+	const { title, year } = generateAlbumData();
+	const album = await model.create("", year);
 
-    expect(album).toBeInstanceOf(Object);
-    expect(album.name).toBe(name);
-    expect(album.year).toBe(year);
+    expect(album).toBeNull();
+});
+
+test('Album was not created with invalid year.', async () => {
+	const { title, year } = generateAlbumData();
+	const album = await model.create(title, -22);
+
+    expect(album).toBeNull();
+});
+
+test('Album was not created with duplicate title.', async () => {
+	const { title, year } = generateAlbumData();
+	const album = await model.create(title, year);
+	const duplicateAlbum = await model.create(title, year);
+
+    expect(duplicateAlbum).toBeNull();
 });
 
 // READ
-test('Can find album by name from DB', async () => {
+test('Album was found by title.', async () => {
     // Create new album and add to database
-	const { name, year } = generateAlbumData();
-	await model.create(name, year);
+	const { title, year } = generateAlbumData();
+	await model.create(title, year);
 
 
     // Get an array of all albums and see if we can find the created album with correct fields
-	const albums = await model.findByName(name);
-    console.log(albums);
+	const albums = await model.findByTitle(title);
 
     expect(Array.isArray(albums)).toBe(true);
-    expect(albums[0].name).toBe(name);
+    expect(albums[0].title).toBe(title);
     expect(albums[0].year).toBe(year);
 });
 
-// UPDATE
-test('Can update album from DB', async () => {
+test('Album was not found by wrong title.', async () => {
     // Create new album and add to database
-	const { name, year } = generateAlbumData();
-	await model.create(name, year);
+	const { title, year } = generateAlbumData();
+	await model.create(title, year);
+
+    const albums = await model.findByTitle("aaaaaa");
+
+    expect(albums.length).toBe(0);
+});
+
+// UPDATE
+test('Album was updated successfully!', async () => {
+    // Create new album and add to database
+	const { title, year } = generateAlbumData();
+	await model.create(title, year);
 
     // Update album with new properties
-    const newName = "New Album Name";
+    const newTitle = "New Album Title";
     const newYear = year - 2;
-    const success = await model.update(name, newName, newYear);
+    const success = await model.update(title, newTitle, newYear);
 
-    // Find the album with its new name to verify that it was properly updated
-    const albums = await model.findByName(newName);
+    // Find the album with its new title to verify that it was properly updated
+    const albums = await model.findByTitle(newTitle);
 
     expect(success).toBe(true);
     expect(albums[0]).toBeInstanceOf(Object);
-    expect(albums[0].name).toBe(newName);
+    expect(albums[0].title).toBe(newTitle);
     expect(albums[0].year).toBe(newYear);
+});
+
+test('Album was not updated with blank title', async () => {
+    // Create new album and add to database
+	const { title, year } = generateAlbumData();
+	await model.create(title, year);
+
+    // Update album with new properties
+    const newTitle = "";
+    const newYear = year - 2;
+    const success = await model.update(title, newTitle, newYear);
+
+    expect(success).toBe(false);
 });
 
 
 // DELETE
 test('Album was removed successfully.', async () => {
     // Create new album and add to database
-	const { name, year } = generateAlbumData();
-	await model.create(name, year);
+	const { title, year } = generateAlbumData();
+	await model.create(title, year);
 
-    const success = await model.remove(name, year);
+    const success = await model.remove(title, year);
     expect(success).toBe(true);
 });
 
