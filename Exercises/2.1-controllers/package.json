@@ -1,0 +1,11 @@
+{
+  "name": "web2exercise2",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "jest --verbose /tests"
+  },
+  "author": "",
+  "license": "ISC"
+}
