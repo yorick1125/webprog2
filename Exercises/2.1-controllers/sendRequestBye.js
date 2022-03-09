@@ -8,11 +8,11 @@ const params = new URLSearchParams(dataToSend).toString();
 const options = {
     host:'localhost',
     port: 1339,
-    path: '/bye?' + params,  // create the path including the query parameters
-    method: 'GET',
-    headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
-    }
+    path: '/bye?' + params,  // create the path including the query parameters
+    method: 'GET',
+    headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+    }
 }
 
 let responseBody = '';

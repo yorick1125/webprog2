@@ -4,14 +4,16 @@ const dataToSend = {
     lastName: 'Niyonkuru'
 }
 
-const params = new URLSearchParams(dataToSend).toString();
+const jsonDataString = JSON.stringify(dataToSend);
+
 const options = {
     host:'localhost',
-    port: 1339,
-    path: '/hello?' + params, // create the path including the query parameters
-    method: 'GET',
+    port: 1337,
+    path: '/mail',
+    method: 'POST',
     headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
+        'Content-Type': 'application/json',
+        'Content-Length': Buffer.byteLength(jsonDataString)
     }
 }
 
@@ -24,4 +26,5 @@ function handleResponse(response) {
     response.on('end',() => console.log(responseBody));  // log the full response
 }
 request.on('error', (err) => console.error(err)); // handle error
+request.write(jsonDataString);
 request.end(); // finishes sending the request

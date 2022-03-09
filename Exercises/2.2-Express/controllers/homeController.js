@@ -23,7 +23,5 @@ function sendMail(request, response){
 module.exports = {
     sayHello,
     sayBye,
-    sendMail,
-    router,
-    routeRoot
+    sendMail
 }

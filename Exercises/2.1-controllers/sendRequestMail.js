@@ -10,11 +10,11 @@ const options = {
     host:'localhost',
     port: 1339,
     path: '/mail',
-    method: 'POST',
-    headers: {
-        'Content-Type': 'application/json',
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json',
         'Content-Length': Buffer.byteLength(jsonDataString)
-    }
+    }
 }
 
 let responseBody = '';

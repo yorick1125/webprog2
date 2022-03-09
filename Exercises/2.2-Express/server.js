@@ -3,18 +3,17 @@ const { report } = require('process');
 
 const app = express();
 const port = 1337;
-const router = express.Router();
-const controller = require('./controllers/controller')
 
-// Handle an endpoint
-// router.get('/hello', (request, response) => {
-//     controller.sayHello(request, response);
-// });
+const controller = require('./controllers/controller');
 
-router.post('/mail',(request, response) => {
-    controller.sendMail(request, response);
-});
-app.use('/', router);
+app.use(express.json());
+
+// router.get('/hello', controller.sayHello);
+// router.get('/bye', controller.sayBye);
+// router.post('/mail', controller.sendMail);
+
+//app.use('/', router);
+app.use(controller.routeRoot, controller.router);
 
 // Run the server!
 app.listen(port);
