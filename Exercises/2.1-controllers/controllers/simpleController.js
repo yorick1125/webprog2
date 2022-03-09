@@ -1,42 +1,63 @@
-function handle(method, url, response){
+const url = require('url').URL;
 
-    if(method === 'GET' && url === '/hello'){
-        sayHello(response);
+function handle(request, response, endPoint){
+
+    if(request.method === 'GET' && endPoint === '/hello'){
+        sayHello(request, response);
         return true;
     }
-    else if(method === 'GET' && url === '/bye'){
-        sayBye(response)
+    else if(request.method === 'GET' && endPoint === '/bye'){
+        sayBye(request, response)
         return true;
     }
-    else if(method === 'POST' && url === '/mail'){
-        canadaPost(response)
+    else if(request.method === 'POST' && endPoint === '/mail'){
+        postMail(request, response)
         return true;
     }
     else{
-        showError(response)
+        showError(request, response)
         return false;
     }
-
 }
 
-function sayHello(response){
+function sayHello(request, response){
+    const fullUrl = new URL(request.url, `http://${request.headers.host}`)
+    const params = fullUrl.searchParams;
+    const firstName = params.get("firstName") ?? "";
+    const lastName = params.get("lastName") ?? "";
+
     response.writeHead(200, {'Content-Type': 'text/plain'});
-    response.write("Hello ")
-    response.end('World');
+    response.write(`Hello World `);
+    response.end(`${firstName} ${lastName}`);
 }
 
-function sayBye(response){
+function sayBye(request, response){
+    const fullUrl = new URL(request.url, `http://${request.headers.host}`)
+    const params = fullUrl.searchParams;
+    const firstName = params.get("firstName") ?? "";
+    const lastName = params.get("lastName") ?? "";
+
     response.writeHead(200, {'Content-Type': 'text/plain'});
-    response.write("Goodbye ")
-    response.end('World');
+    response.write(`Goodbye World `);
+    response.end(`${firstName} ${lastName}`);
 }
 
-function canadaPost(response){
-    response.writeHead(200, {'Content-Type': 'text/plain'});
-    response.end('Canada Post');
+function postMail(request, response){
+    let requestBody = '';
+    request.on('error', (err) => console.error(err));
+    request.on('data', (chunk) => requestBody += chunk);
+    request.on('end', () => {
+        // Convert request to Json format
+        requestJson = JSON.parse(requestBody);
+        response.writeHead(200, {'Content-Type': 'text/plain'});
+        response.write(requestJson.firstName + " " + requestJson.lastName + '\n');
+        response.write('Canada '); 
+        response.end('Post');
+    })
+
 }
 
-function showError(response){
+function showError(request, response){
     response.statusCode = 404;
     response.end('404 Not Found');
 }
