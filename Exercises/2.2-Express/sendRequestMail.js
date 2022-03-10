@@ -8,7 +8,7 @@ const jsonDataString = JSON.stringify(dataToSend);
 
 const options = {
     host:'localhost',
-    port: 1337,
+    port: 1339,
     path: '/mail',
     method: 'POST',
     headers: {

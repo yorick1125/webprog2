@@ -1,15 +1,24 @@
 const express = require('express');
-const router = express.Router();
+const router = initializeRouter();
 const routeRoot = '/';
+
+function initializeRouter(){
+    const r = express.Router();
+    r.get('/hello', sayHello);
+    r.get('/bye', sayBye);
+    r.post('/mail', sendMail);
+    return r;
+}
+
 
 function sayHello(request, response){
     const firstName = request.query.firstName;
-    response.send(`Hello Sir ${firstName}`);
+    response.send(`Hello World ${firstName}`);
 }
 
 function sayBye(request, response){
     const firstName = request.query.firstName;
-    response.send(`Goodbye Sir ${firstName}`);
+    response.send(`Home: Goodbye Sir ${firstName}`);
 }
 
 function sendMail(request, response){
@@ -19,9 +28,27 @@ function sendMail(request, response){
 }
 
 
+function oldSendMail(request, response){
+    let requestBody = '';
+    request.on('error', (err) => console.error(err));
+    request.on('data', (chunk) => requestBody += chunk);
+    request.on('end', () => {
+        // Convert request to Json format
+        requestJson = JSON.parse(requestBody);
+        response.writeHead(200, {'Content-Type': 'text/plain'});
+        response.write(requestJson.firstName + " " + requestJson.lastName + '\n');
+        response.write('Canada '); 
+        response.end('Post');
+    })
+
+}
+
+
 
 module.exports = {
     sayHello,
     sayBye,
-    sendMail
+    sendMail,
+    router,
+    routeRoot
 }

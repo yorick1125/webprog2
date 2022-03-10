@@ -2,18 +2,22 @@ const express = require('express');
 const { report } = require('process');
 
 const app = express();
-const port = 1337;
-
-const controller = require('./controllers/controller');
-
+const port = 1339;
 app.use(express.json());
 
-// router.get('/hello', controller.sayHello);
-// router.get('/bye', controller.sayBye);
-// router.post('/mail', controller.sendMail);
+const controllers = ['homeController', 'simpleController'];
 
-//app.use('/', router);
-app.use(controller.routeRoot, controller.router);
+// Register routes from all controllers
+// Assumes a flat directory structure and common 'routeRoot' / 'router' exports
+controllers.forEach((controllerName) => {
+    try {
+        const controllerRoutes = require('./controllers/' + controllerName);
+        app.use(controllerRoutes.routeRoot, controllerRoutes.router);
+    } catch (error) {
+        // fail gracefully if no routes for this controller
+        console.log('No routes added for controller: ' + controllerName);
+    }
+})
 
 // Run the server!
 app.listen(port);

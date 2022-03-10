@@ -27,6 +27,29 @@ async function initialize() {
 }
 
 /**
+ * Initializes Database and creates Album table with ID, Title and Release Year as fields if the table does not already exist
+ * 
+*/
+async function initialize_testDB() {
+    connection = await mysql.createConnection({
+        host: 'localhost',
+        user: 'root',
+        port: '10000',
+        password: 'pass',
+        database: 'music_db'
+    });
+
+
+    try{
+        const sqlQuery = 'CREATE TABLE IF NOT EXISTS album(id int AUTO_INCREMENT, title VARCHAR(50), year INT, PRIMARY KEY (id))';
+        await connection.execute(sqlQuery);
+    }
+    catch(error){
+        console.error(error);
+    }
+}
+
+/**
  * Creates a new album based on its title and release year.
 * @param {string} tableTitle
 * @returns {boolean} success of truncate
