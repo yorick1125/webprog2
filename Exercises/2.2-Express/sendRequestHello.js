@@ -7,7 +7,7 @@ const dataToSend = {
 const params = new URLSearchParams(dataToSend).toString();
 const options = {
     host:'localhost',
-    port: 1339,
+    port: 1337,
     path: '/hello?' + params, // create the path including the query parameters
     method: 'GET',
     headers: {

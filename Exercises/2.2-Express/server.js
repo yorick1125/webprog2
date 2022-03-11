@@ -2,7 +2,7 @@ const express = require('express');
 const { report } = require('process');
 
 const app = express();
-const port = 1339;
+const port = 1337;
 app.use(express.json());
 
 const controllers = ['homeController', 'simpleController'];
