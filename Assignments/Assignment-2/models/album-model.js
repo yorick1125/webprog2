@@ -7,15 +7,25 @@ var connection;
  * Initializes Database and creates Album table with ID, Title and Release Year as fields if the table does not already exist
  * 
 */
-async function initialize() {
+async function initialize(dbName, reset) {
     connection = await mysql.createConnection({
         host: 'localhost',
         user: 'root',
-        port: '10000',
+        port: '10003',
         password: 'pass',
-        database: 'music_db'
+        database: dbName
     });
 
+
+    if (reset){
+        const dropQuery = "DROP TABLE IF EXISTS album";
+        try{
+            await connection.execute(dropQuery);
+        }
+        catch(error){
+            console.error(error.message);
+        }
+    }
 
     try{
         const sqlQuery = 'CREATE TABLE IF NOT EXISTS album(id int AUTO_INCREMENT, title VARCHAR(50), year INT, PRIMARY KEY (id))';
@@ -30,15 +40,25 @@ async function initialize() {
  * Initializes Database and creates Album table with ID, Title and Release Year as fields if the table does not already exist
  * 
 */
-async function initialize_testDB() {
+async function initialize_testDB(dbName, reset) {
     connection = await mysql.createConnection({
         host: 'localhost',
         user: 'root',
         port: '10000',
         password: 'pass',
-        database: 'music_db'
+        database: dbName
     });
 
+    if (reset){
+        const dropQuery = "DROP TABLE IF EXISTS album";
+        try{
+            await connection.execute(dropQuery);
+            console.log("Table album dropped")
+        }
+        catch(error){
+            console.error(error.message);
+        }
+    }
 
     try{
         const sqlQuery = 'CREATE TABLE IF NOT EXISTS album(id int AUTO_INCREMENT, title VARCHAR(50), year INT, PRIMARY KEY (id))';

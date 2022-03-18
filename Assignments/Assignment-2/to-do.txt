@@ -1,0 +1,3 @@
+1. test controller methods
+2. write test.js with supertest modules
+3. handle failures correctly
