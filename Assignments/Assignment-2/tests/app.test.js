@@ -19,9 +19,9 @@ const albumData = [
 //const generateAlbumData = () => albumData.splice(Math.floor((Math.random() * albumData.length)), 1)[0];
 
 // Slice version - Allows many tests without ever "running out" of generated pokemon
-const generatePokemonData = () => {
-    const index = Math.floor((Math.random() * pokemonData.length));
-    return pokemonData.slice(index, index+1)[0];
+const generateAlbumData = () => {
+    const index = Math.floor((Math.random() * albumData.length));
+    return albumData.slice(index, index+1)[0];
 }
 
 // Initialize database before proceeding
@@ -40,39 +40,100 @@ beforeEach(async () => {
 });
 
 // CREATE
-test.only("POST /album success case", async () => {
-    const { Title, Year } = generateAlbumData();
+test("POST /album success case", async () => {
+    // Create Album
+    const { title, year } = generateAlbumData();
     const testResponse = await testRequest.post('/album/new').send({
-        title: Title,
-        year: Year
+        title: title,
+        year: year
     })
-    console.log(testResponse)
+
     expect(testResponse.status).toBe(200);
+    expect(testResponse.text).toBe(`Album ${title} released in ${year} was created successfully! `)
 });
     
 
 // READ
-test("GET /album success case", async () => {
+test("GET /album full list of albums", async () => {
+    // Fill db with list of albums
+    await testRequest.post('/album/new').send({
+        title: "title1",
+        year: 2001
+    });
+
+    await testRequest.post('/album/new').send({
+        title: "title2",
+        year: 2002
+    });
+
+    await testRequest.post('/album/new').send({
+        title: "title3",
+        year: 2003
+    });
+
+
+
     const testResponse = await testRequest.get('/album/all');
     expect(testResponse.status).toBe(200);
 });
     
 test("GET /album success case", async () => {
-    const testResponse = await testRequest.get('/album/all');
+    // Create Album
+    const { title, year } = generateAlbumData();
+    await testRequest.post('/album/new').send({
+        title: title,
+        year: year
+    });
+
+
+    const testResponse = await testRequest.get(`/album/find?title=${title}`);
     expect(testResponse.status).toBe(200);
+    expect(testResponse.text).toBe(`Album ${title} was found successfully! `)
+
+
 });
 
 // UPDATE
 test("PUT /album success case", async () => {
-    const testResponse = await testRequest.get('/album/all');
+    // Create new Album to test edit
+    const { title, year } = generateAlbumData();
+    await testRequest.post('/album/new').send({
+        title: title,
+        year: year
+    })
+
+    // Edit with new title
+    const newTitle = "New Title";
+    const newYear = year - 2;
+
+    const testResponse = await testRequest.put('/album/edit').send({
+        title: title,
+        newTitle: newTitle,
+        newYear: newYear
+    });
+    
     expect(testResponse.status).toBe(200);
+    expect(testResponse.text).toBe(`Album ${title} was updated successfully with new title: ${newTitle} and new year: ${newYear}. `);
 });
 
 
 // DELETE
 test("DELETE /album success case", async () => {
-    const testResponse = await testRequest.get('/album/all');
+    // Create new Album to test remove
+    const { title, year } = generateAlbumData();
+    await testRequest.post('/album/new').send({
+        title: title,
+        year: year
+    })
+
+    // Remove created album
+    const testResponse = await testRequest.delete('/album/remove').send({
+        title: title,
+        year: year
+    });
+
     expect(testResponse.status).toBe(200);
+    expect(testResponse.text).toBe(`Album ${title} was removed successfully!`);
 });
 
 

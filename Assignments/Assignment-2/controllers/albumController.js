@@ -6,9 +6,9 @@ const model = require('../models/album-model')
 
 router.post('/new', newAlbum)
 router.get('/all', listAlbum)
-router.get('/id', findAlbumById)
-router.put('/album', updateAlbum)
-router.delete('/album', deleteAlbum)
+router.get('/find', findAlbumByTitle)
+router.put('/edit', updateAlbum)
+router.delete('/remove', deleteAlbum)
 
 
 /**
@@ -23,7 +23,7 @@ async function newAlbum(request, response){
 
     const album = await model.create(title, year);
 
-    response.send(`Album ${album.title} of type ${album.year} was created successfully! `)
+    response.send(`Album ${album.title} released in ${album.year} was created successfully! `)
     return album;
 }
 
@@ -58,12 +58,17 @@ async function listAlbum(request, response){
 * @param {Object} response
 * @returns {Object} An album object
 */
-async function findAlbumById(request, response){
-    const id = request.query.id;
+async function findAlbumByTitle(request, response){
+    const title = request.query.title;
 
-    const album = await model.findById(id);
-    response.send(`Album ${album.title} with id ${album.id} was found successfully! `)
-    return album;
+    const albums = await model.findByTitle(title);
+    if(albums[0]){
+        response.send(`Album ${albums[0].title} was found successfully! `)
+    }
+    else{
+        response.send(`Album could not be found. `)
+    }
+    return albums[0];
 }
 
 /**
@@ -73,13 +78,13 @@ async function findAlbumById(request, response){
 * @returns {boolean} Whether the album was edited successfully
 */
 async function updateAlbum(request, response){
-    const title = request.query.title;
-    const newTitle = request.query.newTitle;
-    const newYear = request.query.newYear;
+    const title = request.body.title;
+    const newTitle = request.body.newTitle;
+    const newYear = request.body.newYear;
 
     const success = await model.update(title, newTitle, newYear);
 
-    const message = success ? `Album ${album.title} was updated successfully with new title: ${newTitle} and new year: ${newYear}. ` : 'Could not remove album. '
+    const message = success ? `Album ${title} was updated successfully with new title: ${newTitle} and new year: ${newYear}. ` : 'Could not edit album. '
     response.send(message);
     return success;
 }
@@ -91,12 +96,12 @@ async function updateAlbum(request, response){
 * @returns {boolean} Whether the album was deleted successfully
 */
 async function deleteAlbum(request, response){
-    const title = request.query.title;
-    const year = request.query.year;
+    const title = request.body.title;
+    const year = request.body.year;
 
     const success = await model.remove(title, year);
 
-    const message = success ? `Album ${album.title} was removed successfully! ` : 'Could not remove album. '
+    const message = success ? `Album ${title} was removed successfully!` : 'Could not remove album. '
     response.send(message);
     return success;
 }
