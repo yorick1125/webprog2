@@ -85,8 +85,10 @@ test("GET /album success case", async () => {
         year: year
     });
 
-
+    // Find Previously Created Album
     const testResponse = await testRequest.get(`/album/find?title=${title}`);
+
+    
     expect(testResponse.status).toBe(200);
     expect(testResponse.text).toBe(`Album ${title} was found successfully! `)
 

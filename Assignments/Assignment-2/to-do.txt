@@ -1,2 +1,4 @@
 1. write fail conditions in tests
 2. handle failures in controller more correctly
+3. REST API chart
+4. 
