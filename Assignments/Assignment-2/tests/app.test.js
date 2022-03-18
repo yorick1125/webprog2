@@ -51,6 +51,29 @@ test("POST /album success case", async () => {
     expect(testResponse.status).toBe(200);
     expect(testResponse.text).toBe(`Album ${title} released in ${year} was created successfully! `)
 });
+
+test("POST /album fail case with blank title", async () => {
+    // Create Album
+    const { title, year } = generateAlbumData();
+    const testResponse = await testRequest.post('/album/new').send({
+        title: "",
+        year: year
+    })
+
+    expect(testResponse.status).toBe(404);
+    expect(testResponse.text).toBe('Could not create Album.')
+});
+
+test("POST /album fail case with invalid year", async () => {
+    // Create Album
+    const { title, year } = generateAlbumData();
+    const testResponse = await testRequest.post('/album/new').send({
+        title: title,
+        year: 3000
+    })
+
+    expect(testResponse.status).toBe(404);
+    expect(testResponse.text).toBe('Could not create Album.')});
     
 
 // READ
@@ -88,7 +111,7 @@ test("GET /album success case", async () => {
     // Find Previously Created Album
     const testResponse = await testRequest.get(`/album/find?title=${title}`);
 
-    
+
     expect(testResponse.status).toBe(200);
     expect(testResponse.text).toBe(`Album ${title} was found successfully! `)
 
@@ -119,6 +142,52 @@ test("PUT /album success case", async () => {
 });
 
 
+test("PUT /album fail case", async () => {
+    // Create new Album to test edit
+    const { title, year } = generateAlbumData();
+    await testRequest.post('/album/new').send({
+        title: title,
+        year: year
+    })
+
+    // Edit with invalid new title
+    const newTitle = "";
+    const newYear = year - 2;
+
+    const testResponse = await testRequest.put('/album/edit').send({
+        title: title,
+        newTitle: newTitle,
+        newYear: newYear
+    });
+    
+    expect(testResponse.status).toBe(404);
+    expect(testResponse.text).toBe('Could not edit album. ');
+});
+
+test("PUT /album fail case", async () => {
+    // Create new Album to test edit
+    const { title, year } = generateAlbumData();
+    await testRequest.post('/album/new').send({
+        title: title,
+        year: year
+    })
+
+    // Edit with invalid new title
+    const newTitle = "New Title";
+    const newYear = 3000;
+
+    const testResponse = await testRequest.put('/album/edit').send({
+        title: title,
+        newTitle: newTitle,
+        newYear: newYear
+    });
+    
+    expect(testResponse.status).toBe(404);
+    expect(testResponse.text).toBe('Could not edit album. ');
+});
+
+
+
 // DELETE
 test("DELETE /album success case", async () => {
     // Create new Album to test remove
@@ -137,6 +206,7 @@ test("DELETE /album success case", async () => {
     expect(testResponse.status).toBe(200);
     expect(testResponse.text).toBe(`Album ${title} was removed successfully!`);
 });
+
 
 
 

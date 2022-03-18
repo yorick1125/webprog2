@@ -23,6 +23,13 @@ async function newAlbum(request, response){
 
     const album = await model.create(title, year);
 
+    // if invalid
+    if(album == null){
+        response.statusCode = 404;
+        response.send('Could not create Album.')
+        return;
+    }
+
     response.send(`Album ${album.title} released in ${album.year} was created successfully! `)
     return album;
 }
@@ -84,8 +91,14 @@ async function updateAlbum(request, response){
 
     const success = await model.update(title, newTitle, newYear);
 
-    const message = success ? `Album ${title} was updated successfully with new title: ${newTitle} and new year: ${newYear}. ` : 'Could not edit album. '
-    response.send(message);
+    if(success){
+        response.send(`Album ${title} was updated successfully with new title: ${newTitle} and new year: ${newYear}. `)
+    }
+    else{
+        response.statusCode = 404;
+        response.send('Could not edit album. ');
+    }
+
     return success;
 }
 
@@ -101,8 +114,14 @@ async function deleteAlbum(request, response){
 
     const success = await model.remove(title, year);
 
-    const message = success ? `Album ${title} was removed successfully!` : 'Could not remove album. '
-    response.send(message);
+    if(success){
+        response.send(`Album ${title} was removed successfully!`)
+    }
+    else{
+        response.statusCode = 404;
+        response.send('Could not remove album. ')
+    }
+
     return success;
 }
 
