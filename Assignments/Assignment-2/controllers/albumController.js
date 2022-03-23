@@ -6,9 +6,9 @@ const model = require('../models/album-model')
 
 router.post('/new', newAlbum)
 router.get('/all', listAlbum)
-router.get('/find', findAlbumByTitle)
-router.put('/edit', updateAlbum)
-router.delete('/remove', deleteAlbum)
+router.get('/show', findAlbumByTitle)
+router.put('/update', updateAlbum)
+router.delete('/removal', deleteAlbum)
 
 
 /**

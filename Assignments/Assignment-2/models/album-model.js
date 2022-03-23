@@ -11,7 +11,7 @@ async function initialize(dbName, reset) {
     connection = await mysql.createConnection({
         host: 'localhost',
         user: 'root',
-        port: '10003',
+        port: '10000',
         password: 'pass',
         database: dbName
     });
@@ -116,7 +116,7 @@ async function create(title, year){
     }
     catch(error){
         console.error(error.message);
-
+        return null;
     }
 
 }

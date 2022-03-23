@@ -18,7 +18,7 @@ const albumData = [
 /** Since a Album can only be added to the DB once, we have to splice from the array. */
 //const generateAlbumData = () => albumData.splice(Math.floor((Math.random() * albumData.length)), 1)[0];
 
-// Slice version - Allows many tests without ever "running out" of generated pokemon
+// Slice version - Allows many tests without ever "running out" of generated album
 const generateAlbumData = () => {
     const index = Math.floor((Math.random() * albumData.length));
     return albumData.slice(index, index+1)[0];
