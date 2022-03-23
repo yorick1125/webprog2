@@ -60,8 +60,8 @@ test("POST /album fail case with blank title", async () => {
         year: year
     })
 
-    expect(testResponse.status).toBe(404);
-    expect(testResponse.text).toBe('Could not create Album.')
+    expect(testResponse.status).toBe(400);
+    expect(testResponse.text).toBe(`Invalid input when trying to create  released in ${year}. `)
 });
 
 test("POST /album fail case with invalid year", async () => {
@@ -72,8 +72,25 @@ test("POST /album fail case with invalid year", async () => {
         year: 3000
     })
 
-    expect(testResponse.status).toBe(404);
-    expect(testResponse.text).toBe('Could not create Album.')});
+    expect(testResponse.status).toBe(400);
+    expect(testResponse.text).toBe(`Invalid input when trying to create ${title} released in 3000. `);
+})
+
+
+test("POST /album fail case with closed connection", async () => {
+    // Create Album
+    const { title, year } = generateAlbumData();
+
+    model.endConnection();
+    
+    const testResponse = await testRequest.post('/album/new').send({
+        title: title,
+        year: year
+    })
+
+    expect(testResponse.status).toBe(500);
+    expect(testResponse.text).toBe(`Can't add new command when connection is in closed state`);
+});
     
 
 // READ
@@ -109,7 +126,7 @@ test("GET /album success case", async () => {
     });
 
     // Find Previously Created Album
-    const testResponse = await testRequest.get(`/album/find?title=${title}`);
+    const testResponse = await testRequest.get(`/album/show?title=${title}`);
 
 
     expect(testResponse.status).toBe(200);
@@ -117,6 +134,27 @@ test("GET /album success case", async () => {
 
 
 });
+
+test("GET /album fail case with closed connection", async () => {
+    // Create Album
+    const { title, year } = generateAlbumData();
+
+    model.endConnection();
+    await testRequest.post('/album/new').send({
+        title: title,
+        year: year
+    });
+
+    // Find Previously Created Album
+    const testResponse = await testRequest.get(`/album/show?title=${title}`);
+
+
+    expect(testResponse.status).toBe(500);
+    expect(testResponse.text).toBe(`Can't add new command when connection is in closed state`)
+
+
+});
+
 
 // UPDATE
 test("PUT /album success case", async () => {
@@ -131,7 +169,7 @@ test("PUT /album success case", async () => {
     const newTitle = "New Title";
     const newYear = year - 2;
 
-    const testResponse = await testRequest.put('/album/edit').send({
+    const testResponse = await testRequest.put('/album/update').send({
         title: title,
         newTitle: newTitle,
         newYear: newYear
@@ -154,14 +192,37 @@ test("PUT /album fail case", async () => {
     const newTitle = "";
     const newYear = year - 2;
 
-    const testResponse = await testRequest.put('/album/edit').send({
+    const testResponse = await testRequest.put('/album/update').send({
         title: title,
         newTitle: newTitle,
         newYear: newYear
     });
     
-    expect(testResponse.status).toBe(404);
-    expect(testResponse.text).toBe('Could not edit album. ');
+    expect(testResponse.status).toBe(400);
+    expect(testResponse.text).toBe(`Invalid input when trying to update fields to ${newTitle} and ${newYear}`);
+});
+
+
+test("PUT /album fail case", async () => {
+    // Create new Album to test edit
+    const { title, year } = generateAlbumData();
+    await testRequest.post('/album/new').send({
+        title: title,
+        year: year
+    })
+
+    // Edit with invalid new year
+    const newTitle = "New Title";
+    const newYear = 3000;
+
+    const testResponse = await testRequest.put('/album/update').send({
+        title: title,
+        newTitle: newTitle,
+        newYear: newYear
+    });
+    
+    expect(testResponse.status).toBe(400);
+    expect(testResponse.text).toBe(`Invalid input when trying to update fields to ${newTitle} and ${newYear}`);
 });
 
 test("PUT /album fail case", async () => {
@@ -172,18 +233,20 @@ test("PUT /album fail case", async () => {
         year: year
     })
 
-    // Edit with invalid new title
+    // Edit with invalid new year
     const newTitle = "New Title";
-    const newYear = 3000;
+    const newYear = 2000;
 
-    const testResponse = await testRequest.put('/album/edit').send({
+    model.endConnection();
+
+    const testResponse = await testRequest.put('/album/update').send({
         title: title,
         newTitle: newTitle,
         newYear: newYear
     });
     
-    expect(testResponse.status).toBe(404);
-    expect(testResponse.text).toBe('Could not edit album. ');
+    expect(testResponse.status).toBe(500);
+    expect(testResponse.text).toBe(`Can't add new command when connection is in closed state`);
 });
 
 
@@ -198,7 +261,7 @@ test("DELETE /album success case", async () => {
     })
 
     // Remove created album
-    const testResponse = await testRequest.delete('/album/remove').send({
+    const testResponse = await testRequest.delete('/album/removal').send({
         title: title,
         year: year
     });

@@ -21,17 +21,27 @@ async function newAlbum(request, response){
     const title = request.body.title;
     const year = request.body.year;
 
-    const album = await model.create(title, year);
-
-    // if invalid
-    if(album == null){
-        response.statusCode = 404;
-        response.send('Could not create Album.')
-        return;
+    try{
+        const album = await model.create(title, year);
+        response.send(`Album ${album.title} released in ${album.year} was created successfully! `)
+        return album;
+    }
+    catch(error){
+        if(error instanceof model.InvalidInputError){
+            response.statusCode = 400;
+            response.send(error.message);
+        }
+        else if(error instanceof model.DatabaseExecutionError){
+            response.statusCode = 500;
+            response.send(error.message);
+        }
+        else{
+            console.error(error.message);
+            throw error;
+        }
     }
 
-    response.send(`Album ${album.title} released in ${album.year} was created successfully! `)
-    return album;
+
 }
 
 /**
@@ -41,21 +51,34 @@ async function newAlbum(request, response){
 * @returns {Array} An array of album objects
 */
 async function listAlbum(request, response){
-    const albums = await model.findAll();
+    try {
+        const albums = await model.findAll();
     
-    if(albums.length == 0){
-        response.send('Empty list of albums.')
-        return;
-    }
+        if(albums.length == 0){
+            response.send('Empty list of albums.')
+            return;
+        }
+    
+        let message = "";
+    
+        albums.forEach((album) => {
+            message += album.id + " | " + album.title + " | " + album.year + '\n';
+        })
+    
+        response.send(message);
+        return albums;
+    } 
+    catch (error) {
+        if(error instanceof model.DatabaseExecutionError){
+            response.statusCode = 500;
+            response.send(error.message);
+        }
+        else{
+            console.error(error.message);
+            throw error;
+        }
+}
 
-    let message = "";
-
-    albums.forEach((album) => {
-        message += album.title + '\n';
-    })
-
-    response.send(message);
-    return albums;
 
 }
 
@@ -68,14 +91,28 @@ async function listAlbum(request, response){
 async function findAlbumByTitle(request, response){
     const title = request.query.title;
 
-    const albums = await model.findByTitle(title);
-    if(albums[0]){
-        response.send(`Album ${albums[0].title} was found successfully! `)
+    try {
+        const albums = await model.findByTitle(title);
+        if(albums[0]){
+            response.send(`Album ${albums[0].title} was found successfully! `)
+        }
+        else{
+            response.statusCode = 404;
+            response.send(`Album could not be found. `)
+        }
+        return albums[0];
+    } 
+    catch (error) {
+        if(error instanceof model.DatabaseExecutionError){
+            response.statusCode = 500;
+            response.send(error.message);
+        }
+        else{
+            console.error(error.message);
+            throw error;
+        }
     }
-    else{
-        response.send(`Album could not be found. `)
-    }
-    return albums[0];
+
 }
 
 /**
@@ -89,17 +126,29 @@ async function updateAlbum(request, response){
     const newTitle = request.body.newTitle;
     const newYear = request.body.newYear;
 
-    const success = await model.update(title, newTitle, newYear);
+    try {
+        const success = await model.update(title, newTitle, newYear);
 
-    if(success){
         response.send(`Album ${title} was updated successfully with new title: ${newTitle} and new year: ${newYear}. `)
-    }
-    else{
-        response.statusCode = 404;
-        response.send('Could not edit album. ');
+    
+        return success;
+    } 
+    catch (error) {
+        if(error instanceof model.InvalidInputError){
+            response.statusCode = 400;
+            response.send(error.message);
+        }
+        else if(error instanceof model.DatabaseExecutionError){
+            response.statusCode = 500;
+            response.send(error.message);
+        }
+        else{
+            console.error(error.message);
+            throw error;
+        }
+
     }
 
-    return success;
 }
 
 /**
@@ -112,24 +161,33 @@ async function deleteAlbum(request, response){
     const title = request.body.title;
     const year = request.body.year;
 
-    const success = await model.remove(title, year);
 
-    if(success){
-        response.send(`Album ${title} was removed successfully!`)
-    }
-    else{
-        response.statusCode = 404;
-        response.send('Could not remove album. ')
+    try {
+        const success = await model.remove(title, year);
+
+        if(success){
+            response.send(`Album ${title} was removed successfully!`)
+        }
+        else{
+            response.statusCode = 404;
+            response.send('Could not remove album. ')
+        }
+    
+        return success;
+    } 
+    
+    catch (error) {
+        if(error instanceof model.DatabaseExecutionError){
+            response.statusCode = 500;
+            response.send(error.message);
+        }
+        else{
+            console.error(error.message);
+            throw error;
+        }
     }
 
-    return success;
 }
-
-
-
-
-
-
 
 
 module.exports = {

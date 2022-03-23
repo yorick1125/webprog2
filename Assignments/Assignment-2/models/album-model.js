@@ -36,38 +36,6 @@ async function initialize(dbName, reset) {
     }
 }
 
-/**
- * Initializes Database and creates Album table with ID, Title and Release Year as fields if the table does not already exist
- * 
-*/
-async function initialize_testDB(dbName, reset) {
-    connection = await mysql.createConnection({
-        host: 'localhost',
-        user: 'root',
-        port: '10000',
-        password: 'pass',
-        database: dbName
-    });
-
-    if (reset){
-        const dropQuery = "DROP TABLE IF EXISTS album";
-        try{
-            await connection.execute(dropQuery);
-            console.log("Table album dropped")
-        }
-        catch(error){
-            console.error(error.message);
-        }
-    }
-
-    try{
-        const sqlQuery = 'CREATE TABLE IF NOT EXISTS album(id int AUTO_INCREMENT, title VARCHAR(50), year INT, PRIMARY KEY (id))';
-        await connection.execute(sqlQuery);
-    }
-    catch(error){
-        console.error(error);
-    }
-}
 
 /**
  * Creates a new album based on its title and release year.
@@ -95,14 +63,13 @@ async function truncate(tableTitle){
 async function create(title, year){
     // Validate Input
     if(!validateUtils.isValid(title, year)){
-        return null;
-        //return new InvalidInputError(`Invalid input when trying to create ${title}`);
+        throw new InvalidInputError(`Invalid input when trying to create ${title} released in ${year}. `);
     }
 
     // check if album already exists
     const albums = await findByTitle(title);
     if(albums.length > 0){
-        return null;
+        throw new InvalidInputError(`${title} already exists. `);
     }
 
     try{
@@ -116,7 +83,7 @@ async function create(title, year){
     }
     catch(error){
         console.error(error.message);
-        return null;
+        throw new DatabaseExecutionError(error.message);
     }
 
 }
@@ -156,7 +123,7 @@ async function findByTitle(title){
     }
     catch(error){
         console.error(error.message);
-        return null;
+        throw new DatabaseExecutionError(error.message);
     }
 
 }
@@ -176,7 +143,7 @@ async function findAll(){
     }
     catch(error){
         console.error(error.message);
-        return null;
+        throw new DatabaseExecutionError(error.message);
     }
 
 }
@@ -191,14 +158,19 @@ async function findAll(){
 async function update(currentTitle, newTitle, newYear){
     // Validate Input for both current and new title, and make sure element exists
     if(!validateUtils.isValid(newTitle, newYear)){
-        return false;
-        //throw new InvalidInputError(`Invalid input when trying to update fields to ${newTitle} and ${newYear}`);
+        throw new InvalidInputError(`Invalid input when trying to update fields to ${newTitle} and ${newYear}`);
     }
 
-    if(findByTitle(currentTitle) == null){
-        console.error(`No such album with title ${currentTitle}`);
-        return false;
+    try {
+        if(await findByTitle(currentTitle) == null){
+            console.error(`No such album with title ${currentTitle}`);
+            return false;
+        }
+    } 
+    catch (error) {
+        throw error;
     }
+
 
 
     try{
@@ -210,7 +182,7 @@ async function update(currentTitle, newTitle, newYear){
     }
     catch(error){
         console.error(error.message);
-        return false;
+        throw new DatabaseExecutionError(error.message);
     }
 
 }
@@ -222,6 +194,12 @@ async function update(currentTitle, newTitle, newYear){
 * @returns {boolean} if db is now removed of that album
 */
 async function remove(title, year){
+
+    // if album doesn't exist
+    if(findByTitle(title).length < 1){
+        return false;
+    }
+
     try{
         // Execute Sql command to database
         const sqlQuery = `DELETE FROM album WHERE title = ? AND year = ?`;
@@ -231,7 +209,7 @@ async function remove(title, year){
     }
     catch(error){
         console.error(error.message);
-        return false;
+        throw new DatabaseExecutionError(error.message);
     }
 
 }
@@ -248,10 +226,14 @@ function endConnection(){
 }
 
 class InvalidInputError extends Error {
-
+    
 }
 
 class InvalidFileError extends Error {
+
+}
+
+class DatabaseExecutionError extends Error {
 
 }
 
@@ -266,5 +248,6 @@ module.exports = {
     getConnection,
     endConnection,
     InvalidFileError,
-    InvalidInputError
+    InvalidInputError,
+    DatabaseExecutionError
 }
