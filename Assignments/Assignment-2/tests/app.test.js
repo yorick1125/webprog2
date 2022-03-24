@@ -180,7 +180,7 @@ test("PUT /album success case", async () => {
 });
 
 
-test("PUT /album fail case", async () => {
+test("PUT /album fail case with invalid new title", async () => {
     // Create new Album to test edit
     const { title, year } = generateAlbumData();
     await testRequest.post('/album/new').send({
@@ -193,7 +193,7 @@ test("PUT /album fail case", async () => {
     const newYear = year - 2;
 
     const testResponse = await testRequest.put('/album/update').send({
-        title: title,
+        title: "",
         newTitle: newTitle,
         newYear: newYear
     });
@@ -203,7 +203,7 @@ test("PUT /album fail case", async () => {
 });
 
 
-test("PUT /album fail case", async () => {
+test("PUT /album fail case with invalid new year", async () => {
     // Create new Album to test edit
     const { title, year } = generateAlbumData();
     await testRequest.post('/album/new').send({
@@ -225,7 +225,7 @@ test("PUT /album fail case", async () => {
     expect(testResponse.text).toBe(`Invalid input when trying to update fields to ${newTitle} and ${newYear}`);
 });
 
-test("PUT /album fail case", async () => {
+test("PUT /album fail case with closed connection", async () => {
     // Create new Album to test edit
     const { title, year } = generateAlbumData();
     await testRequest.post('/album/new').send({
@@ -267,6 +267,26 @@ test("DELETE /album success case", async () => {
     });
 
     expect(testResponse.status).toBe(200);
+    expect(testResponse.text).toBe(`Album ${title} was removed successfully!`);
+});
+
+// DELETE
+test("DELETE /album fail case", async () => {
+    // Create new Album to test remove
+    const { title, year } = generateAlbumData();
+    await testRequest.post('/album/new').send({
+        title: title,
+        year: year
+    })
+    model.endConnection();
+
+    // Remove created album
+    const testResponse = await testRequest.delete('/album/removal').send({
+        title: title,
+        year: year
+    });
+
+    expect(testResponse.status).toBe(500);
     expect(testResponse.text).toBe(`Album ${title} was removed successfully!`);
 });
 

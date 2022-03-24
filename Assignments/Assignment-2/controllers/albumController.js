@@ -164,15 +164,7 @@ async function deleteAlbum(request, response){
 
     try {
         const success = await model.remove(title, year);
-
-        if(success){
-            response.send(`Album ${title} was removed successfully!`)
-        }
-        else{
-            response.statusCode = 404;
-            response.send('Could not remove album. ')
-        }
-    
+        response.send(`Album ${title} was removed successfully!`)
         return success;
     } 
     
