@@ -1,0 +1,50 @@
+<body>
+    <div id="page"></div>
+        <h1> {{heading}} </h1>
+        <p> {{content}} </p>
+        <img style="width:256px;height:256px;" src="{{image}}"> 
+
+        <h2>Comments</h2>
+        <ul>
+            {{#each comments}}
+                <li>Comment {{@index}}: {{this}}</li>
+            {{/each}}
+        </ul>
+
+        <h2>Items</h2>
+        <ul>
+            {{#each item}}
+                <li>{{ name }} costs ${{ price }} -> category: {{categorize price}}</li>
+            {{/each}}
+        </ul>
+
+        {{#if showDetails}}
+        <h2>Details</h2>
+            <ul>
+                <li>Name: {{details.name}}</li>
+                <li>Id: {{details.id}}</li>
+            </ul>
+        {{else}}
+        <h1>Details private</h1>
+        {{/if}}
+
+
+
+        <form action="/input" method="post" role ="form">
+        <legend>Enter personal info</legend>
+            {{#each formFields}}
+                <label for="first_name">First name:</label><br>
+                <input type="text" id="first_name" name="first_name">
+            {{/each}}
+
+
+          <label for="last_name">Last name:</label><br>
+          <input type="text" id="last_name" name="last_name">
+
+          <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+
+    </div>
+
+</body>
+                          
