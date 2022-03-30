@@ -32,16 +32,14 @@
 
         <form action="/input" method="post" role ="form">
         <legend>Enter personal info</legend>
-            {{#each formFields}}
-                <label for="first_name">First name:</label><br>
-                <input type="text" id="first_name" name="first_name">
-            {{/each}}
 
-
-          <label for="last_name">Last name:</label><br>
-          <input type="text" id="last_name" name="last_name">
-
-          <button type="submit" class="btn btn-primary">Submit</button>
+        {{#each formFields}}
+            <div style="display: block;margin: 10px 0px">
+                <label for={{fieldName}}>{{label}}</label><br>
+                <input type="text" id={{fieldName}} name={{fieldName}}>
+            </div>
+        {{/each}}
+            <button type="submit" class="btn btn-primary">Submit</button>
         </form>
 
     </div>

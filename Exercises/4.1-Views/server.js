@@ -31,7 +31,17 @@ function home(request, response){
 
         helpers: {
             categorize
-        }
+        },
+        formFields: [
+            {
+                fieldName: "first_name",
+                label: "First Name: "
+            },
+            {
+                fieldName: "last_name",
+                label: "Last Name: "
+            }
+        ]
     }
 
     response.render('page.hbs', homePageData);

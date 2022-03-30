@@ -1,11 +1,27 @@
 <header>
     <h1 style="text-align:center">This header appears on all pages using this partial</h1>
 
-    <div id="nav">
+    <!-- A grey horizontal navbar that becomes vertical on small screens -->
+    <nav class="navbar navbar-expand-sm bg-light" >
+    <div class="container-fluid">
+        <!-- Links -->
+        <ul class="navbar-nav">
+        <li class="nav-item">
+            <a class="nav-link" href="/home">Home</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/about">About</a>
+        </li>
+        </ul>
+    </div>
+    </nav> 
+
+
+    {{!-- <div id="nav">
         <img style="width:64px;height:64px;margin-right:50px" src="images/charizard.png"> 
         <a id="links" href="/home">Home</a>
         <a id="links" href="/about">About</a>
-    </div>
+    </div> --}}
 
 
 </header>
