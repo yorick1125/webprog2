@@ -1,7 +1,7 @@
 const validator = require('validator');
 
 const validTypes = [
-    "normal", "grass", "water", "electric", "fire", "psychic"
+    "normal", "grass", "water", "electric", "fire", "psychic", "fighting", "dragon"
 ]
 
 /** Check validity of name and type. 

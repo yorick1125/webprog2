@@ -5,6 +5,25 @@ body{
 }
 
 header{
-    background-color: yellow;
+    background-color: gold;
 }
- 
+
+.createForm {
+    margin: 10px;
+    padding: 20px;
+    background-color: rgb(205, 50, 0);
+    border: black solid 2px;
+    border-radius: 1%;
+    color: white;
+    text-shadow: 1px 1px black;
+    width: 28%;
+}
+
+.formLegend {
+    background-color:rgb(179, 182, 15);
+    background-color: gold;
+    width: auto;
+    border: black solid 1px;
+    padding: 0px 20px;
+    border-radius: 2%;
+}
