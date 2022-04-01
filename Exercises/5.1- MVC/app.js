@@ -3,7 +3,7 @@ const app = express();
 const {engine} = require('express-handlebars');
 const bodyParser = require('body-parser');
 // const pinohttp = require('pino-http');
-
+const expressListRoutes = require('express-list-routes');
 
 
 // Tell the app to use handlebars templating engine.  
@@ -34,5 +34,7 @@ controllers.forEach((controllerName) => {
        console.log(error);
     }    
 })
+
+expressListRoutes(app, {prefix: '/'});
 
 module.exports = app
