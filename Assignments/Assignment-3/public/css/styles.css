@@ -1,9 +1,53 @@
 body{
-    background-color: lightblue; 
+    background-color: rgb(7, 8, 5); 
+    color:white;
     padding: 0;
     margin: 0;
 }
-
 header{
-    background-color: gold;
+    background-color: rgb(246, 246, 103);
+}
+
+.header-text{
+    margin-top: -33px;
+    text-align: center;
+    color: black;
+    text-shadow: 1.2px 1.2px black ;
+}
+
+nav{
+    background-color: black;
+    color: black;
+    text-align: center;
+}
+
+
+a{
+    padding-right: 50px;
+    padding-left: 50px;
+    font-size: 30px;
+    text-decoration: none;
+    color: yellow;
+    text-shadow: 1px 1px black;
+}
+
+.header-logo{
+    width: 5%;
+    height: 100%;
+    margin-bottom: -30px;
+}
+
+footer{
+    color: yellow;
+    text-shadow: 1px 1px black;
+}
+
+
+
+@media screen and (max-width: 1224px) {
+    .header-logo{
+        width: 10%;
+        height: 10%;
+        margin-bottom: -30px;
+    }
 }

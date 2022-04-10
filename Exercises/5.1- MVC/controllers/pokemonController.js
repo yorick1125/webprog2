@@ -6,6 +6,8 @@ const model = require('../models/pokemonModelMysql')
 
 router.post('/pokemon', newPokemon);
 router.get('/pokemon', showPokemon);
+router.get('/all', listPokemon);
+
 
 async function newPokemon(request, response){
     const name = request.body.name;
@@ -62,6 +64,16 @@ async function showPokemon(request, response){
         pokemon: pokemon
     }
     response.render('show.hbs', showPageData)
+}
+
+async function listPokemon(request, response){
+    const pokemons = await model.findAll();
+
+    const listPageData = {
+        heading: "Here is a list of all pokemon",
+        pokemons: pokemons
+    }
+    response.render('list.hbs', listPageData);
 }
 
 module.exports = {

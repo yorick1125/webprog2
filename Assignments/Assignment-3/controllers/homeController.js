@@ -5,7 +5,11 @@ const routeRoot = '/home';
 router.get('/', showHomepage)
 
 function showHomepage(request, response){
-    response.send('Homepage')
+    const homePageData = {
+        heading: "Home",
+        content: "Welcome to our homepage"
+    }
+    response.render('home.hbs', homePageData)
 }
 
 module.exports = {
