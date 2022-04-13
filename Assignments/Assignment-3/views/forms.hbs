@@ -1,0 +1,71 @@
+<div>
+    {{#if displayAddForm}}
+
+    <div class="form">
+    <form action="/album" method="post" role ="form" >
+        <legend class="formLegend" style="padding: 10px;"><u>Add new album</u></legend>
+        <label for="title">Enter album title:</label><br>
+        <input type="text" name="title" id="title">
+        <br>
+        <label for="year">Enter album release year:</label><br>
+        <input type="text" name="year" id="year">
+        <br>
+        <button type="submit" class="btn btn-primary">Submit</button>
+
+    </form>
+    {{/if}}
+
+    {{#if displayShowForm}}
+
+    
+    <div class="form">
+    <form action="/album" method="post" role ="form" >
+        <legend class="formLegend" style="padding: 10px;"><u>Add new album</u></legend>
+        <label for="title">Enter album title:</label><br>
+        <input type="text" name="title" id="title">
+        <br>
+        <label for="year">Enter album release year:</label><br>
+        <input type="text" name="year" id="year">
+        <br>
+        <button type="submit" class="btn btn-primary">Submit</button>
+
+    </form>
+    {{/if}}
+
+    {{#if displayEditForm}}
+    </div>
+    <div class="form">
+        <form action="/album/edit" method="post" role ="form" >
+            <legend class="formLegend" style="padding: 10px;"><u>Edit album</u></legend>
+            <label for="currentTitle">Enter current album title:</label><br>
+            <input type="text" name="currentTitle" id="currentTitle">
+            <br>
+            <label for="newTitle">Enter new album title:</label><br>
+            <input type="text" name="newTitle" id="newTitle">
+            <br>
+            <label for="newYear">Enter new album release year:</label><br>
+            <input type="text" name="newYear" id="newYear">
+            <br>
+            <button type="submit" class="btn btn-primary">Submit</button>
+
+        </form>
+    </div>
+    {{/if}}
+
+    {{#if displayDeleteForm}}
+    <div class="form">
+        <form action="/album/delete" method="post" role ="form" >
+            <legend class="formLegend" style="padding: 10px;"><u>Delete album</u></legend>
+            <label for="title">Enter album title to be deleted:</label><br>
+            <input type="text" name="title" id="title">
+            <br>
+            <label for="title">Enter album year to be deleted:</label><br>
+            <input type="text" name="year" id="year">
+            <br>
+            <button type="submit" class="btn btn-primary">Submit</button>
+
+        </form>
+    </div>
+    {{/if}}
+
+</div>

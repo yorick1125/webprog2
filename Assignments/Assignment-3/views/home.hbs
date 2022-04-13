@@ -1,5 +1,9 @@
-<div class="home">
-    <h1>{{heading}}</h1>
-    <h3>{{content}}</h3>
-</div>
+<form action="/home" method="post" role ="form" enctype="application/x-www-form-urlencoded">
+  <legend>What would you like to do?</legend>
+  <button name="choice" type="submit" class="btn btn-primary" value="add" >Add Album</button>    
+  <button name="choice" type="submit" class="btn btn-primary" value="show" >Show Album</button>  
+  <button name="choice" type="submit" class="btn btn-primary" value="list" >List All Albums</button>  
+  <button name="choice" type="submit" class="btn btn-primary" value="edit" >Edit Album</button>  
+  <button name="choice" type="submit" class="btn btn-primary" value="delete" >Delete Album</button>
+</form>
 

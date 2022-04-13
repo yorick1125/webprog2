@@ -1,14 +1,14 @@
 const express = require('express');
 const router = express.Router();
-const routeRoot = '/album';
+const routeRoot = '/';
 const model = require('../models/album-model')
 
 
-router.post('/new', newAlbum)
-router.get('/all', listAlbum)
-router.get('/show', findAlbumByTitle)
-router.put('/update', updateAlbum)
-router.delete('/removal', deleteAlbum)
+router.post('/album', newAlbum)
+router.get('/albums', listAlbum)
+router.get('/album', findAlbumByTitle)
+router.post('/album/edit', updateAlbum)
+router.post('/album/delete', deleteAlbum)
 
 
 /**
@@ -55,17 +55,20 @@ async function listAlbum(request, response){
         const albums = await model.findAll();
     
         if(albums.length == 0){
-            response.send('Empty list of albums.')
+            const errorPageData = {
+                heading: "Empty DB",
+                content: 'The database does not contain any albums. '
+            }
+            response.render('error.hbs', errorPageData)
             return;
         }
-    
-        let message = "";
-    
-        albums.forEach((album) => {
-            message += album.id + " | " + album.title + " | " + album.year + '\n';
-        })
-    
-        response.send(message);
+
+        const listPageData = {
+            heading: 'Albums',
+            albums: albums
+        }
+        response.render('albums.hbs', listPageData)
+        //response.send(message);
         return albums;
     } 
     catch (error) {
@@ -122,7 +125,7 @@ async function findAlbumByTitle(request, response){
 * @returns {boolean} Whether the album was edited successfully
 */
 async function updateAlbum(request, response){
-    const title = request.body.title;
+    const title = request.body.currentTitle;
     const newTitle = request.body.newTitle;
     const newYear = request.body.newYear;
 
